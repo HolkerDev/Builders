@@ -67,6 +67,32 @@ class DistanceTests {
         viewModel.computeDistancesList(distance, step)
         assert(viewModel.distanceState.value is NegativeNumbers)
     }
+
+    @Test
+    fun `should return correct list of distances with 0 residue`() {
+        val distance = "15"
+        val step = "5"
+        viewModel.computeDistancesList(distance, step)
+        val list = viewModel.stateDistancesList()
+        val residue = viewModel.stateResidue()
+        assertEquals(list[0], 0.0 to 5.0)
+        assertEquals(list[1], 5.0 to 10.0)
+        assertEquals(residue, 0.0, 0.0)
+    }
+
+    @Test
+    fun `should return correct list of distances with non 0 residue`() {
+        val distance = "24"
+        val step = "5"
+        viewModel.computeDistancesList(distance, step)
+        val list = viewModel.stateDistancesList()
+        val residue = viewModel.stateResidue()
+        assertEquals(list[0], 0.0 to 5.0)
+        assertEquals(list[1], 5.0 to 10.0)
+        assertEquals(list[2], 10.0 to 15.0)
+        assertEquals(list[3], 15.0 to 20.0)
+        assertEquals(residue, 4.0, 0.0)
+    }
 }
 
 fun DistanceVM.stateDistancesList(): List<Pair<Double, Double>> =

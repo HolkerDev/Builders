@@ -44,7 +44,7 @@ fun Distance() {
                 )
             }
             Button(onClick = {
-
+                viewModel.computeDistancesList(distanceString, stepString)
             }) {
                 Text("Расчитать!")
             }
