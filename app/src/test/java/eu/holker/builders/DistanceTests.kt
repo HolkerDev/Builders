@@ -49,7 +49,7 @@ class DistanceTests {
     }
 
     @Test
-    fun `should return `() {
+    fun `should return WrongFormat if distance is not a number`() {
         val distance = "wrong_format"
         val step = "15"
         viewModel.computeDistancesList(distance, step)
@@ -57,7 +57,7 @@ class DistanceTests {
     }
 
     @Test
-    fun `should return 1`() {
+    fun `should return WrongFormat if step is not a number`() {
         val distance = "15"
         val step = "wrong_format"
         viewModel.computeDistancesList(distance, step)
