@@ -1,8 +1,11 @@
 package eu.holker.builders.screens.distance
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -57,7 +60,7 @@ fun Distance() {
                 }
             }
 
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(10.dp))
 
             DistancesInfoField(state = state)
         }
@@ -68,7 +71,20 @@ fun Distance() {
 fun DistancesInfoField(state: State<DistanceState?>) {
     when (state.value) {
         is DistanceState.OK -> {
-            Text("OK")
+            val response = (state.value as DistanceState.OK)
+            val residue = response.residue
+            Box(contentAlignment = Alignment.BottomCenter) {
+                DistanceResidue(residue)
+            }
+
+            Spacer(modifier = Modifier.padding(2.dp))
+
+            LazyColumn {
+                items(response.distancesList.size) { index ->
+                    val distancePair = response.distancesList[index]
+                    DistanceItem(start = distancePair.first, end = distancePair.second)
+                }
+            }
         }
         DistanceState.WrongFormat -> {
             Text("Неправильный формат входных данных")
@@ -77,8 +93,28 @@ fun DistancesInfoField(state: State<DistanceState?>) {
             Text("Отрицательные значения не поддерживаются")
         }
         DistanceState.DistanceLessThanStep -> {
-            Text(text = "Расстояние должно быть больше шага")
+            Text("Расстояние должно быть больше шага")
         }
+    }
+}
+
+@Composable
+fun DistanceItem(start: Double, end: Double) {
+    Row(
+        modifier = Modifier
+            .border(2.dp, MaterialTheme.colors.primary)
+            .padding(1.dp)
+            .fillMaxSize(), horizontalArrangement = Arrangement.Center
+    ) {
+        Text("Начало $start см. Конец: $end см.")
+    }
+    Spacer(modifier = Modifier.padding(2.dp))
+}
+
+@Composable
+fun DistanceResidue(residue: Double) {
+    Row {
+        Text(text = "Остаток: $residue см.")
     }
 }
 
