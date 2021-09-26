@@ -48,6 +48,20 @@ fun Distance() {
             }) {
                 Text("Расчитать!")
             }
+            when (state.value) {
+                is DistanceState.OK -> {
+                    Text("OK")
+                }
+                DistanceState.WrongFormat -> {
+                    Text("Wrong format")
+                }
+                DistanceState.NegativeNumbers -> {
+                    Text("Negative Numbers")
+                }
+                DistanceState.DistanceLessThanStep -> {
+                    Text(text = "Lower greater issue")
+                }
+            }
         }
     }
 }
