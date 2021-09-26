@@ -4,6 +4,7 @@ sealed class DistanceState {
     data class OK(val distancesList: List<Pair<Double, Double>>, val residue: Double) :
         DistanceState()
 
+    object DistanceLessThanStep : DistanceState()
     object NegativeNumbers : DistanceState()
     object WrongFormat : DistanceState()
 }

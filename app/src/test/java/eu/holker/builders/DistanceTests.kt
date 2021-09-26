@@ -16,12 +16,11 @@ class DistanceTests {
     private val viewModel = DistanceVM()
 
     @Test
-    fun `should return OK with empty list of distances if step is bigger than distance`() {
+    fun `should return DistanceLessThanStep if step is bigger than distance`() {
         val distance = "10"
         val step = "25"
         viewModel.computeDistancesList(distanceString = distance, stepString = step)
-        assertTrue(viewModel.distanceState.value is OK)
-        assert(viewModel.stateDistancesList().isEmpty())
+        assertTrue(viewModel.distanceState.value is DistanceLessThanStep)
     }
 
     @Test
@@ -42,6 +41,7 @@ class DistanceTests {
         viewModel.computeDistancesList(distance, step)
         assertTrue(viewModel.distanceState.value is OK)
         assertEquals(viewModel.stateDistancesList().size, 2)
+        assert(viewModel.stateResidue() == 0.0)
     }
 
     @Test

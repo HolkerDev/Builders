@@ -7,10 +7,10 @@ import eu.holker.builders.screens.distance.DistanceState.*
 
 class DistanceVM : ViewModel() {
 
-    private var _distanceState = MutableLiveData<DistanceState>()
+    private var state = MutableLiveData<DistanceState>()
 
     val distanceState: LiveData<DistanceState>
-        get() = _distanceState
+        get() = state
 
     fun computeDistancesList(
         distanceString: String,
@@ -20,7 +20,10 @@ class DistanceVM : ViewModel() {
             val distance: Double = distanceString.toDouble()
             val step: Double = stepString.toDouble()
             if (step < 0 || distance < 0) {
-                _distanceState.value = NegativeNumbers
+                state.value = NegativeNumbers
+                return
+            } else if (step > distance) {
+                state.value = DistanceLessThanStep
                 return
             }
             var currentSum = 0.0
@@ -29,9 +32,9 @@ class DistanceVM : ViewModel() {
                 listOfDistances.add(currentSum to currentSum + step)
                 currentSum += step
             }
-            _distanceState.value = OK(listOfDistances, distance - currentSum)
+            state.value = OK(listOfDistances, distance - currentSum)
         } catch (e: NumberFormatException) {
-            _distanceState.value = WrongFormat
+            state.value = WrongFormat
         }
     }
 }
