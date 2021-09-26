@@ -29,7 +29,7 @@ class DistanceVM : ViewModel() {
                 listOfDistances.add(currentSum to currentSum + step)
                 currentSum += step
             }
-            _distanceState.value = OK(listOfDistances)
+            _distanceState.value = OK(listOfDistances, distance - currentSum)
         } catch (e: NumberFormatException) {
             _distanceState.value = WrongFormat
         }

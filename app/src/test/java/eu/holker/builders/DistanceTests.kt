@@ -9,12 +9,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class DistanceTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -27,6 +21,7 @@ class DistanceTests {
         val step = "25"
         viewModel.computeDistancesList(distanceString = distance, stepString = step)
         assertTrue(viewModel.distanceState.value is OK)
+        assert(viewModel.stateDistancesList().isEmpty())
     }
 
     @Test
@@ -36,7 +31,8 @@ class DistanceTests {
         viewModel.computeDistancesList(distance, step)
 
         assertTrue(viewModel.distanceState.value is OK)
-        assertEquals((viewModel.distanceState.value as OK).distancesList.size, 1)
+        assertEquals(viewModel.stateDistancesList().size, 1)
+        assert(viewModel.stateResidue() == 5.0)
     }
 
     @Test
@@ -45,7 +41,7 @@ class DistanceTests {
         val step = "15"
         viewModel.computeDistancesList(distance, step)
         assertTrue(viewModel.distanceState.value is OK)
-        assertEquals((viewModel.distanceState.value as OK).distancesList.size, 2)
+        assertEquals(viewModel.stateDistancesList().size, 2)
     }
 
     @Test
@@ -72,3 +68,9 @@ class DistanceTests {
         assert(viewModel.distanceState.value is NegativeNumbers)
     }
 }
+
+fun DistanceVM.stateDistancesList(): List<Pair<Double, Double>> =
+    (this.distanceState.value as OK).distancesList
+
+fun DistanceVM.stateResidue(): Double =
+    (this.distanceState.value as OK).residue
