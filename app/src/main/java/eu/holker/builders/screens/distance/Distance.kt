@@ -26,7 +26,7 @@ fun Distance() {
     ) {
         var distanceString by remember { mutableStateOf("") }
         var stepString by remember { mutableStateOf("") }
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row {
                 TextField(
                     value = distanceString,
@@ -43,10 +43,12 @@ fun Distance() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
-            Button(onClick = {
-                viewModel.computeDistancesList(distanceString, stepString)
-            }) {
-                Text("Расчитать!")
+            Box {
+                Button(onClick = {
+                    viewModel.computeDistancesList(distanceString, stepString)
+                }) {
+                    Text("Расчитать!")
+                }
             }
             when (state.value) {
                 is DistanceState.OK -> {
