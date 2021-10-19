@@ -111,6 +111,18 @@ class DistanceTests {
         assertEquals(12, list.size)
         assertEquals(list[0], 0.0 to 1.0)
     }
+
+    @Test
+    fun `should round all distances up to 2 chars after dot`() {
+        val distance = "270"
+        val step = "30.2"
+        viewModel.computeDistancesList(distance, step)
+        val list = viewModel.stateDistancesList()
+        list.forEach { distanceStep ->
+            println(distanceStep)
+            assertTrue(distanceStep.first.toString().substringAfter(".").length <= 2)
+        }
+    }
 }
 
 fun DistanceVM.stateDistancesList(): List<Pair<Double, Double>> =

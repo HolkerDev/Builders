@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import eu.holker.builders.screens.distance.DistanceState.*
+import kotlin.math.round
 
 class DistanceVM : ViewModel() {
 
@@ -29,12 +30,18 @@ class DistanceVM : ViewModel() {
             var currentSum = 0.0
             val listOfDistances = mutableListOf<Pair<Double, Double>>()
             while (distance >= currentSum + step) {
-                listOfDistances.add(currentSum to currentSum + step)
+                val endOfDistance = currentSum + step
+                listOfDistances.add(currentSum.round() to endOfDistance.round())
                 currentSum += step
+                currentSum.round()
             }
             state.value = OK(listOfDistances, distance - currentSum)
         } catch (e: NumberFormatException) {
             state.value = WrongFormat
         }
+    }
+
+    private fun Double.round(): Double {
+        return round(this * 100) / 100
     }
 }
