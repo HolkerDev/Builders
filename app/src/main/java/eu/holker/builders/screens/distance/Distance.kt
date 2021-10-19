@@ -1,5 +1,10 @@
 package eu.holker.builders.screens.distance
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.view.View
+import android.view.WindowManager
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,15 +17,22 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.ExperimentalUnitApi
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 
 @Preview
 @Composable
 fun Distance() {
     val viewModel = DistanceVM()
     val state = viewModel.distanceState.observeAsState()
+    KeepScreenOn()
     Box(
         modifier = Modifier
             .fillMaxSize(), contentAlignment = Alignment.TopCenter
@@ -77,7 +89,7 @@ fun DistancesInfoField(state: State<DistanceState?>) {
                 DistanceResidue(residue)
             }
 
-            Spacer(modifier = Modifier.padding(2.dp))
+            Spacer(modifier = Modifier.padding(5.dp))
 
             LazyColumn {
                 items(response.distancesList.size) { index ->
@@ -98,15 +110,14 @@ fun DistancesInfoField(state: State<DistanceState?>) {
     }
 }
 
+@OptIn(ExperimentalUnitApi::class)
 @Composable
 fun DistanceItem(start: Double, end: Double) {
     Row(
         modifier = Modifier
-            .border(2.dp, MaterialTheme.colors.primary)
-            .padding(1.dp)
             .fillMaxSize(), horizontalArrangement = Arrangement.Center
     ) {
-        Text("Начало $start см. Конец: $end см.")
+        Text("$start -> $end", fontSize = TextUnit(24f, TextUnitType.Sp))
     }
     Spacer(modifier = Modifier.padding(2.dp))
 }
@@ -118,3 +129,23 @@ fun DistanceResidue(residue: Double) {
     }
 }
 
+@Composable
+fun KeepScreenOn() {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val window = context.findActivity()?.window
+        window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        onDispose {
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+}
+
+private fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
+}

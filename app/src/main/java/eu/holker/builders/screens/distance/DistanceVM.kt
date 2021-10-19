@@ -22,7 +22,7 @@ class DistanceVM : ViewModel() {
             if (step < 0 || distance < 0) {
                 state.value = NegativeNumbers
                 return
-            } else if (step > distance) {
+            } else if ((step > distance).or(step == 0.0)) {
                 state.value = DistanceLessThanStep
                 return
             }

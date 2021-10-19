@@ -93,6 +93,24 @@ class DistanceTests {
         assertEquals(list[3], 15.0 to 20.0)
         assertEquals(residue, 4.0, 0.0)
     }
+
+    @Test
+    fun `should return Distance Less Than Step when step equals to 0`() {
+        val distance = "0"
+        val step = "0"
+        viewModel.computeDistancesList(distance, step)
+        assertTrue(viewModel.distanceState.value is DistanceLessThanStep)
+    }
+
+    @Test
+    fun `should return correct list of distances for 1 sm step`() {
+        val distance = "12"
+        val step = "1"
+        viewModel.computeDistancesList(distance, step)
+        val list = viewModel.stateDistancesList()
+        assertEquals(12, list.size)
+        assertEquals(list[0], 0.0 to 1.0)
+    }
 }
 
 fun DistanceVM.stateDistancesList(): List<Pair<Double, Double>> =
